@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\YandexMusicTrackUpdatedEvent;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Jobs\TrackYandexMusicJob;
 use App\Services\YandexMusicService;
 
 class YandexMusicPusherController extends Controller
 {
-    protected $yandexMusicService;
+    protected YandexMusicService $yandexMusicService;
 
     public function __construct(YandexMusicService $yandexMusicService)
     {
         $this->yandexMusicService = $yandexMusicService;
     }
 
-    public function getCurrentTrack(Request $request)
+    public function getCurrentTrack(Request $request): JsonResponse
     {
         $yaToken = config('app.yandex_token');
         if (!$yaToken) {
@@ -24,12 +26,12 @@ class YandexMusicPusherController extends Controller
         $this->yandexMusicService->setToken($yaToken);
         $trackData = $this->yandexMusicService->getCurrentTrackBeta();
 
-        event(new \App\Events\YandexMusicTrackUpdated($trackData));
+        event(new YandexMusicTrackUpdatedEvent($trackData));
 
         return response()->json($trackData);
     }
 
-    public function startTracking(Request $request)
+    public function startTracking(Request $request): JsonResponse
     {
         $yaToken = config('app.yandex_token');
         $interval = $request->input('interval', 2);

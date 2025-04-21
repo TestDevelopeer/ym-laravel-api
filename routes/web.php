@@ -15,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [MusicController::class, 'index']);
+Route::get('/', [YandexMusicController::class, 'getCurrentTrack']);
 
-Route::get('/get_current_track_beta', [YandexMusicController::class, 'getCurrentTrackBeta'])->name('getCurrentTrackBeta');
+Route::get('/get_current_track_beta', [YandexMusicController::class, 'getCurrentTrack'])->name('getCurrentTrackBeta');

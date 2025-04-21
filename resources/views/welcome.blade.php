@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <meta content="{{ csrf_token() }}" name="csrf-token">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Текущий трек из Яндекс Музыки</title>
@@ -8,9 +9,7 @@
     @vite(['resources/css/app.css'])
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-<div class="p-8 max-w-md w-full">
-    {{--<h1 class="text-2xl font-bold text-center mb-6">Текущий трек из Яндекс Музыки</h1>--}}
-
+<div class="p-8 max-w-md w-full" id="yandex-music-player">
     @if($track)
         <div class="flex items-center space-x-4 mb-6">
             <img src="{{ $track['image_url'] }}" alt="Обложка" class="w-24 h-24 rounded-lg">
@@ -22,16 +21,16 @@
         </div>
 
         <div class="flex justify-between items-center text-sm text-gray-500">
-            <span>{{ date("i:s", $progress / 1000) }}</span>
-            <span>{{ date("i:s", $duration / 1000) }}</span>
+            <span id="progress">{{ date("i:s", $progress / 1000) }}</span>
+            <span id="duration">{{ date("i:s", $duration / 1000) }}</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
-            <div class="bg-yellow-100 h-2.5 rounded-full"
+            <div class="bg-yellow-100 h-2.5 rounded-full" id="percentage"
                  style="width: {{$progress / $duration * 100}}%"></div>
         </div>
 
         <div class="mt-6 flex justify-center space-x-4">
-            <a href="https://music.yandex.ru/album/{{ $track['albums'][0]['id'] }}/track/{{ $track['id'] }}" target="_blank"
+            <a href="https://music.yandex.ru/track/{{ $track['id'] }}" target="_blank"
                class="px-4 py-2 bg-yellow-100 text-white rounded hover:bg-blue-700 transition">
                 Слушать в Яндекс Музыке
             </a>
@@ -43,5 +42,6 @@
         </div>
     @endif
 </div>
+@vite(['resources/js/app.js', 'resources/js/yandex-music.js'])
 </body>
 </html>

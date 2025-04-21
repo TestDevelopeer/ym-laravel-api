@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
 return [
-
+    'yandex_token' => env('YANDEX_TOKEN', ''),
     /*
     |--------------------------------------------------------------------------
     | Application Name

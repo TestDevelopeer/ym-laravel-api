@@ -92,6 +92,12 @@ class TelegramBotController extends Controller
             $track['id']
         );
 
+        if ($trackData['paused']) {
+            $caption .= "\n⏸ Сейчас на паузе";
+        } else {
+            $caption .= "\n▶️ Сейчас играет";
+        }
+
         $replyMarkup = [
             'inline_keyboard' => [
                 [

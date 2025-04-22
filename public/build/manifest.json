@@ -1,0 +1,19 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-CGFHdwqx.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-BmVKpJDa.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/yandex-music.js": {
+    "file": "assets/yandex-music-BojM4Bbo.js",
+    "name": "yandex-music",
+    "src": "resources/js/yandex-music.js",
+    "isEntry": true
+  }
+}

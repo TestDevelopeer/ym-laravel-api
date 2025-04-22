@@ -24,7 +24,7 @@ class YandexMusicController extends Controller
         if (!isset($track['track'])) {
             $track = null;
         }
-        dd($track);
+
         return view('welcome', ['track' => $track['track'], 'duration' => $track['duration_ms'], 'progress' => $track['progress_ms']]);
     }
 }

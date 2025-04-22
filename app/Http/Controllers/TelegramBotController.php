@@ -9,6 +9,7 @@ use JsonException;
 use Log;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
+use Telegram\Bot\FileUpload\InputFile;
 
 class TelegramBotController extends Controller
 {
@@ -82,6 +83,9 @@ class TelegramBotController extends Controller
         $progressPercent = round($trackData['progress_ms'] / $trackData['duration_ms'] * 100);
         $progressBar = $this->generateProgressBar($progressPercent);
 
+        $imageUrl = $track['image_url'];
+        $image = InputFile::create($imageUrl, 'track_cover.jpg');
+
         // Основная информация о треке
         $caption = sprintf(
             "🎵 *%s* - %s\n".
@@ -121,14 +125,25 @@ class TelegramBotController extends Controller
         ];
 
         // Отправляем изображение с подписью
-        $telegram->sendPhoto([
-            'chat_id' => $chatId,
-            'photo' => $track['image_url'],
-            'caption' => $caption,
-            'parse_mode' => 'Markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => json_encode($replyMarkup, JSON_THROW_ON_ERROR)
-        ]);
+        try {
+            $telegram->sendPhoto([
+                'chat_id' => $chatId,
+                'photo' => $image,
+                'caption' => $caption,
+                'parse_mode' => 'Markdown',
+                'disable_web_page_preview' => true,
+                'reply_markup' => json_encode($replyMarkup, JSON_THROW_ON_ERROR)
+            ]);
+        } catch (Exception) {
+            // Если не удалось отправить фото, отправляем текстовое сообщение
+            $telegram->sendMessage([
+                'chat_id' => $chatId,
+                'text' => $caption,
+                'parse_mode' => 'Markdown',
+                'disable_web_page_preview' => true,
+                'reply_markup' => json_encode($replyMarkup, JSON_THROW_ON_ERROR)
+            ]);
+        }
     }
 
     protected function formatMilliseconds($ms): string

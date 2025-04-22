@@ -36,14 +36,6 @@ class TelegramBotController extends Controller
         $chatId = $update->getChat()->getId();
         $message = $update->getMessage()->getText();
 
-        if ($message === '/start') {
-            $this->telegram->sendMessage([
-                'chat_id' => $chatId,
-                'text' => 'Привет! Я бот для работы с API. Отправь мне запрос, и я обращусь к API.'
-            ]);
-            return response()->json(['status' => 'success']);
-        }
-
         $trackData = $this->getCurrentTrackData();
         $this->sendTrackInfo($this->telegram, $chatId, $trackData);
         return response()->json(['status' => 'success']);
@@ -80,8 +72,6 @@ class TelegramBotController extends Controller
         $track = $trackData['track'];
         $duration = $this->formatMilliseconds($trackData['duration_ms']);
         $progress = $this->formatMilliseconds($trackData['progress_ms']);
-        $progressPercent = round($trackData['progress_ms'] / $trackData['duration_ms'] * 100);
-        $progressBar = $this->generateProgressBar($progressPercent);
 
         $imageUrl = $track['image_url'];
         $image = InputFile::create($imageUrl, 'track_cover.jpg');
@@ -89,9 +79,10 @@ class TelegramBotController extends Controller
         // Основная информация о треке
         $caption = sprintf(
             "🎵 *%s* - %s\n".
+            "👤 Исполнитель: %s\n".
             "💿 Альбом: %s\n".
             "⏱ Продолжительность: %s\n".
-            "▶️ Прогресс: %s / %s\n%s\n".
+            "▶️ Прогресс: %s / %s\n".
             "🔗 [Слушать на Яндекс.Музыке](https://music.yandex.ru/track/%s)",
             $track['title'],
             implode(', ', array_column($track['artists'], 'name')),
@@ -99,15 +90,8 @@ class TelegramBotController extends Controller
             $duration,
             $progress,
             $duration,
-            $progressBar,
             $track['id']
         );
-
-        if ($trackData['paused']) {
-            $caption .= "\n⏸ Сейчас на паузе";
-        } else {
-            $caption .= "\n▶️ Сейчас играет";
-        }
 
         $replyMarkup = [
             'inline_keyboard' => [
@@ -158,13 +142,5 @@ class TelegramBotController extends Controller
         }
 
         return sprintf("%d:%02d", $minutes, $seconds);
-    }
-
-    protected function generateProgressBar($percent, $length = 20): string
-    {
-        $filled = round($percent / 100 * $length);
-        $empty = $length - $filled;
-
-        return '[' . str_repeat('█', $filled) . str_repeat('░', $empty) . '] ' . $percent . '%';
     }
 }

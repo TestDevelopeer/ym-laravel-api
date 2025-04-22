@@ -5,6 +5,7 @@ use Illuminate\Support\ServiceProvider;
 
 return [
     'yandex_token' => env('YANDEX_TOKEN', ''),
+    'telegram_token' => env('TELEGRAM_BOT_TOKEN', ''),
     /*
     |--------------------------------------------------------------------------
     | Application Name

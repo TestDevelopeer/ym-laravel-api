@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\YandexMusicController;
 use App\Http\Controllers\YandexMusicPusherController;
 use Illuminate\Http\Request;
@@ -24,3 +25,4 @@ Route::get('/get_current_track_beta', [YandexMusicController::class, 'getCurrent
 
 Route::get('/yandex-music/current-track', [YandexMusicPusherController::class, 'getCurrentTrack']);
 Route::post('/yandex-music/start-tracking', [YandexMusicPusherController::class, 'startTracking']);
+Route::post('/telegram-webhook', [TelegramBotController::class, 'handleWebhook']);

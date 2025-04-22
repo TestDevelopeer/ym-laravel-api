@@ -77,9 +77,9 @@ class TelegramBotController extends Controller
     {
         // Форматируем данные
         $track = $trackData['track'];
-        $duration = $this->formatMilliseconds($track['duration_ms']);
+        $duration = $this->formatMilliseconds($trackData['duration_ms']);
         $progress = $this->formatMilliseconds($trackData['progress_ms']);
-        $progressPercent = round($trackData['progress_ms'] / $track['duration_ms'] * 100);
+        $progressPercent = round($trackData['progress_ms'] / $trackData['duration_ms'] * 100);
         $progressBar = $this->generateProgressBar($progressPercent);
 
         // Основная информация о треке
